@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Encuentra tu mesa</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Pinyon+Script&display=swap">
+<style>
+:root{--bg1:#fbf3de;--bg2:#f4e3bb;--ink:#4e3f2f;--title:#5b4630;--muted:#7d6a52;--line:#6b4a2b;--card:#fffdf8;--border:#ead9b5;--lilac:#ddd0df;--lilac-b:#bda8cb;--shadow:0 3px 14px rgba(90,60,20,.14);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a2017;--bg2:#1a130e;--ink:#f1e6cf;--title:#f3e2b3;--muted:#c9b99c;--line:#d9b56a;--card:#2f261c;--border:#46382a;--lilac:#4b3f5c;--lilac-b:#7a66a0;--shadow:0 3px 14px rgba(0,0,0,.45);color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#2a2017;--bg2:#1a130e;--ink:#f1e6cf;--title:#f3e2b3;--muted:#c9b99c;--line:#d9b56a;--card:#2f261c;--border:#46382a;--lilac:#4b3f5c;--lilac-b:#7a66a0;--shadow:0 3px 14px rgba(0,0,0,.45);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{position:relative;margin:0;min-height:100vh;color:var(--ink);background-color:var(--bg1);background-image:radial-gradient(ellipse at 90% 0%,rgba(255,255,255,.5),transparent 55%),linear-gradient(180deg,var(--bg1),var(--bg2));font:600 21px/1.4 "Cormorant Garamond",Georgia,"Times New Roman",serif}
+.fl{position:absolute;width:clamp(150px,44vw,270px);height:auto;pointer-events:none;z-index:0}
+.tl{top:0;left:0}.br{bottom:0;right:0;transform:rotate(180deg)}
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:clamp(170px,47vw,290px) 18px clamp(150px,44vw,270px)}
+header{text-align:center}
+h1{font-weight:700;font-style:italic;font-size:clamp(2rem,8.5vw,2.9rem);line-height:1.1;margin:0;color:var(--title)}
+.rule{width:min(300px,70%);height:2px;background:var(--line);margin:16px auto 6px}
+.novios{color:var(--title)}
+.sc{display:block;font:400 clamp(2.6rem,12vw,4rem)/1.15 "Pinyon Script","Snell Roundhand","Apple Chancery",Georgia,serif}
+.dt{display:block;font-weight:700;letter-spacing:.14em;font-size:1.3rem;margin-top:2px}
+.dv{display:flex;align-items:center;gap:12px;margin:14px 0 4px;color:var(--line)}
+.dv i{flex:1;height:2px;background:var(--line)}.dv svg{width:44px;height:18px}
+.box{position:relative;margin-top:18px}
+input{width:100%;font:inherit;font-size:1.5rem;font-weight:600;padding:16px 62px 16px 20px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);box-shadow:var(--shadow);outline:none;-webkit-appearance:none;appearance:none}
+input::placeholder{color:var(--muted);font-style:italic}
+input:focus{border-color:#8a6bc2;box-shadow:0 0 0 3px var(--lilac-b)}
+input::-webkit-search-cancel-button{display:none}
+#clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:48px;height:48px;border:0;border-radius:12px;background:var(--lilac);color:var(--title);font:700 1.8rem/1 Georgia,serif;cursor:pointer;display:none}
+#clear:focus-visible{outline:3px solid var(--lilac-b);outline-offset:2px}
+#status{margin:18px 4px 12px;color:var(--muted);font-size:1.25rem;font-style:italic;min-height:1.4em;text-align:center}
+.card{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.name{font-weight:700;font-size:1.65rem;line-height:1.15;overflow-wrap:anywhere}
+.mesa{flex:none;min-width:96px;text-align:center;background:var(--lilac);border:1px solid var(--lilac-b);border-radius:14px;padding:8px 10px;color:var(--title)}
+.mesa small{display:block;font-size:.85rem;letter-spacing:.24em;font-weight:700}
+.mesa b{display:block;font-size:3.5rem;line-height:1;font-weight:700;font-variant-numeric:lining-nums}
+.empty{text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:24px 20px;font-size:1.4rem;font-weight:700}
+footer{margin-top:28px;text-align:center;color:var(--muted);font-size:1.15rem;font-style:italic}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="sf" viewBox="0 0 100 100"><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(11.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(33.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(56.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(78.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(101.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(123.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(146.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(168.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(191.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(213.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(236.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(258.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(281.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(303.5 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(326.0 50 50)"/><ellipse cx="50" cy="14" rx="6.5" ry="16" fill="#e6a50a" transform="rotate(348.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(0.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(22.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(45.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(67.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(90.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(112.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(135.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(157.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(180.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(202.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(225.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(247.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(270.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(292.5 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(315.0 50 50)"/><ellipse cx="50" cy="16" rx="6" ry="15" fill="#f8cd2b" transform="rotate(337.5 50 50)"/><circle cx="50" cy="50" r="20" fill="#5b3412"/><circle cx="50" cy="50" r="15" fill="#7a4a1a"/><circle cx="50" cy="50" r="7" fill="#3f230c"/><circle cx="61.0" cy="50.0" r="1.7" fill="#b9732c"/><circle cx="59.5" cy="55.5" r="1.7" fill="#b9732c"/><circle cx="55.5" cy="59.5" r="1.7" fill="#b9732c"/><circle cx="50.0" cy="61.0" r="1.7" fill="#b9732c"/><circle cx="44.5" cy="59.5" r="1.7" fill="#b9732c"/><circle cx="40.5" cy="55.5" r="1.7" fill="#b9732c"/><circle cx="39.0" cy="50.0" r="1.7" fill="#b9732c"/><circle cx="40.5" cy="44.5" r="1.7" fill="#b9732c"/><circle cx="44.5" cy="40.5" r="1.7" fill="#b9732c"/><circle cx="50.0" cy="39.0" r="1.7" fill="#b9732c"/><circle cx="55.5" cy="40.5" r="1.7" fill="#b9732c"/><circle cx="59.5" cy="44.5" r="1.7" fill="#b9732c"/></symbol><symbol id="ls" viewBox="0 0 100 100"><ellipse cx="50" cy="27" rx="21" ry="27" fill="#7f62bd" transform="rotate(0 50 50)"/><ellipse cx="50" cy="27" rx="21" ry="27" fill="#7f62bd" transform="rotate(72 50 50)"/><ellipse cx="50" cy="27" rx="21" ry="27" fill="#7f62bd" transform="rotate(144 50 50)"/><ellipse cx="50" cy="27" rx="21" ry="27" fill="#7f62bd" transform="rotate(216 50 50)"/><ellipse cx="50" cy="27" rx="21" ry="27" fill="#7f62bd" transform="rotate(288 50 50)"/><ellipse cx="50" cy="30" rx="13" ry="19" fill="#a98fdc" transform="rotate(36 50 50)"/><ellipse cx="50" cy="30" rx="13" ry="19" fill="#a98fdc" transform="rotate(108 50 50)"/><ellipse cx="50" cy="30" rx="13" ry="19" fill="#a98fdc" transform="rotate(180 50 50)"/><ellipse cx="50" cy="30" rx="13" ry="19" fill="#a98fdc" transform="rotate(252 50 50)"/><ellipse cx="50" cy="30" rx="13" ry="19" fill="#a98fdc" transform="rotate(324 50 50)"/><circle cx="50" cy="50" r="6" fill="#f0d45a"/><circle cx="59.0" cy="50.0" r="1.8" fill="#e8c23c"/><circle cx="54.5" cy="57.8" r="1.8" fill="#e8c23c"/><circle cx="45.5" cy="57.8" r="1.8" fill="#e8c23c"/><circle cx="41.0" cy="50.0" r="1.8" fill="#e8c23c"/><circle cx="45.5" cy="42.2" r="1.8" fill="#e8c23c"/><circle cx="54.5" cy="42.2" r="1.8" fill="#e8c23c"/></symbol><symbol id="lf" viewBox="0 0 40 70"><ellipse cx="20" cy="35" rx="14" ry="31" fill="#8db09e"/><path d="M20 6V64" stroke="#6c917f" stroke-width="1.5"/></symbol><symbol id="orn" viewBox="0 0 60 24"><path fill="currentColor" d="M30 2c-4 6-4 11 0 16 4-5 4-10 0-16zM28 18C20 18 13 14 6 8c7 0 14 2 22 10zM32 18c8 0 15-4 22-10-7 0-14 2-22 10z"/></symbol><g id="cl"><use href="#lf" x="150" y="0" width="44.0" height="77.0" transform="rotate(60 172.0 38.5)"/><use href="#lf" x="15" y="150" width="44.0" height="77.0" transform="rotate(-30 37.0 188.5)"/><use href="#lf" x="185" y="115" width="36.0" height="63.0" transform="rotate(110 203.0 146.5)"/><use href="#lf" x="105" y="165" width="40" height="70" transform="rotate(20 125 200)"/><use href="#lf" x="55" y="-10" width="36.0" height="63.0" transform="rotate(-50 73.0 21.5)"/><use href="#sf" x="15" y="5" width="140" height="140"/><use href="#sf" x="-22" y="100" width="100" height="100"/><use href="#sf" x="150" y="-22" width="90" height="90"/><use href="#ls" x="140" y="72" width="85" height="85"/><use href="#ls" x="58" y="150" width="75" height="75"/><use href="#ls" x="-8" y="40" width="58" height="58"/></g></defs></svg><svg class="fl tl" viewBox="0 0 260 260" aria-hidden="true"><use href="#cl"/></svg><svg class="fl br" viewBox="0 0 260 260" aria-hidden="true"><use href="#cl"/></svg>
+<main>
+<header>
+  <h1>Encuentra tu mesa</h1>
+  <div class="rule"></div>
+  <!-- EDITA AQUÍ los nombres y la fecha -->
+  <div class="novios"><span class="sc">Daniela &amp; Sebastian</span><span class="dt">— 21/11/26</span></div>
+  <div class="dv"><i></i><svg aria-hidden="true"><use href="#orn"/></svg><i></i></div>
+  <div class="box">
+    <input id="q" type="text" inputmode="search" enterkeyhint="search" placeholder="Escribe tu nombre o apellido" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" autofocus aria-label="Buscar invitado por nombre o apellido">
+    <button id="clear" type="button" aria-label="Limpiar búsqueda">×</button>
+  </div>
+</header>
+<div id="status" role="status" aria-live="polite"></div>
+<div id="results"></div>
+<footer>¿Dudas? Consulta con los organizadores Jessica y Juan Pablo 💛</footer>
+</main>
+<script>
+/* LISTA DE INVITADOS: ["Nombre completo", N° de mesa]. Edita aquí para cambiar a alguien de mesa. */
+const GUESTS=[
+["Daniela Rivera", 1],
+["Sebastian Ellena", 1],
+["Veronica Godoy", 1],
+["Jorge Ellena Palmieri", 1],
+["Ana Rivera", 1],
+["Rita Alchao", 1],
+["Doris Loyola", 1],
+["Camilo Rivera", 2],
+["Cecilia Pérez", 2],
+["Marco Pérez", 2],
+["Felipe Cerda", 2],
+["Anaís Pérez", 2],
+["Fernanda Ayala", 2],
+["Martin Ayala", 2],
+["Ignacio Chamblas", 2],
+["Camilo Tapia", 2],
+["Claudio Riveros", 2],
+["Jorge Ellena Godoy", 3],
+["Angela Urriola", 3],
+["Matias Ellena", 3],
+["Jocelyn Conejeros", 3],
+["Catalina Ellena", 3],
+["Ignacio Salinas", 3],
+["Franco Ellena", 3],
+["Piero Ellena", 3],
+["Octavio Ellena", 3],
+["Eleonora Ellena", 3],
+["Ivan Rivera", 4],
+["María Inés González", 4],
+["Cristina Fita", 4],
+["Patricio Rivera", 4],
+["Cecilia Rivera", 4],
+["Marcos Pérez", 4],
+["Ximena Nuñez", 4],
+["Osvaldo Ayala", 4],
+["Hortensia Rivera", 4],
+["Manuel Tapia", 4],
+["Juan Pablo Godoy", 5],
+["Alejandra Gaete", 5],
+["Constanza Godoy", 5],
+["Armando Partos", 5],
+["Patricia Aros", 5],
+["Rodrigo Leon", 5],
+["Paulina Vigneaux", 5],
+["Marcela Flores", 5],
+["Andreas Heusler", 5],
+["María Inés Rivera", 6],
+["Carlos Farfán", 6],
+["Carlos Rivera", 6],
+["Paulina Rivera", 6],
+["Patricia Rivera", 6],
+["Sebastián Acevedo", 6],
+["Cristina Rivera", 6],
+["Andres Jorquera", 6],
+["Valeria Leiva", 6],
+["Patricio Rivera Fita", 6],
+["Rodrigo Verdugo", 7],
+["Yarella Angulo", 7],
+["Sandra Guajardo", 7],
+["Michael Escudero", 7],
+["Claudia Urrea", 7],
+["Gloria Belmar", 7],
+["Adolfo Guajardo", 7],
+["Robert Cedeño", 7],
+["Diana Rojas", 7],
+["Barbara Pizarro", 8],
+["Elías Leyton", 8],
+["Carolina Marin", 8],
+["Cristian Acevedo", 8],
+["Carolina Carvacho", 8],
+["Carolina Pérez", 8],
+["Florencia Romero", 8],
+["Renato Defilippi", 8],
+["Christian Inostroza", 8],
+["Valentina Barrientos", 9],
+["Josefa Alcaino", 9],
+["Valentina Bustamante", 9],
+["Benjamin Lopez", 9],
+["Ismael Soto", 9],
+["Daniela Miranda", 9],
+["Jose Villarroel", 9],
+["Fernanda Guzmán", 9],
+["Joaquin Palma", 9],
+["Pilar Cornejo", 9],
+["Fabian Pillancari", 10],
+["Omar Fuentes", 10],
+["Camila Guajardo", 10],
+["Isaac Gallardo", 10],
+["Alexandra Garcia", 10],
+["Francisca Campos", 10],
+["Mijail Cáceres", 10],
+["Paula Concha", 10],
+["Pololo Pau", 10],
+["Marina Calderón", 10],
+["Manuel Vergara", 10],
+["Cristian De Medici", 11],
+["Patricio Dougett", 11],
+["Ljuba Pivalica", 11],
+["Juan Pablo Padruno", 11],
+["Jose Flores", 11],
+["Gustavo Batarce", 11],
+["Cristobal Johnson", 11],
+["Gonzalo Romero", 11],
+["Joaquin Rondanelli", 11],
+["Tamara Yañez", 11],
+["Rodrigo Castillo", 12],
+["Ignacio Galvez", 12],
+["Fernanda Ojeda", 12],
+["Claudio Barbahelada", 12],
+["Katrina Salinas", 12],
+["Luis Lagos", 12],
+["Gaspar Elicer", 12],
+["Jose Antonio Ruiz-Tagle", 12],
+["Jael Barahona", 12],
+["Camilo Toro", 12],
+["Kharla Soto", 12]
+];
+
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+const DB=GUESTS.map(([name,mesa])=>{const n=norm(name);return{name,mesa,n,words:n.split(" ")}});
+
+function lev(a,b){
+  if(a===b)return 0;
+  let p=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const c=[i];
+    for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));
+    p=c;
+  }
+  return p[b.length];
+}
+const maxDist=t=>t.length<3?0:t.length<=5?1:2;
+
+function search(q){
+  const toks=norm(q).split(" ").filter(Boolean);
+  if(norm(q).length<2)return{type:"short"};
+  const exact=[];
+  for(const g of DB){
+    if(toks.every(t=>g.n.includes(t))){
+      const s=toks.reduce((a,t)=>a+(g.words.some(w=>w.startsWith(t))?1:0),0);
+      exact.push({g,s});
+    }
+  }
+  if(exact.length){
+    exact.sort((a,b)=>b.s-a.s||a.g.name.localeCompare(b.g.name,"es"));
+    return{type:"exact",list:exact.map(x=>x.g)};
+  }
+  const fuzzy=[];
+  for(const g of DB){
+    let total=0,ok=true;
+    for(const t of toks){
+      const m=maxDist(t);let best=99;
+      for(const w of g.words){
+        const d=Math.min(lev(t,w),w.length>t.length?lev(t,w.slice(0,t.length)):99);
+        if(d<best)best=d;
+      }
+      if(best>m){ok=false;break}
+      total+=best;
+    }
+    if(ok)fuzzy.push({g,total});
+  }
+  fuzzy.sort((a,b)=>a.total-b.total||a.g.name.localeCompare(b.g.name,"es"));
+  return fuzzy.length?{type:"fuzzy",list:fuzzy.slice(0,8).map(x=>x.g)}:{type:"none"};
+}
+
+const $=id=>document.getElementById(id),q=$("q"),res=$("results"),st=$("status"),clr=$("clear");
+function card(g){
+  const c=document.createElement("div");c.className="card";
+  const n=document.createElement("div");n.className="name";n.textContent=g.name;
+  const m=document.createElement("div");m.className="mesa";
+  const s=document.createElement("small");s.textContent="MESA";
+  const b=document.createElement("b");b.textContent=g.mesa;
+  m.append(s,b);c.append(n,m);return c;
+}
+function render(){
+  const v=q.value;clr.style.display=v?"block":"none";
+  res.textContent="";
+  const r=search(v);
+  if(r.type==="short"){st.textContent=v.trim()?"Escribe al menos 2 letras…":"Escribe tu nombre o apellido para ver tu mesa.";return}
+  if(r.type==="none"){
+    st.textContent="";
+    const e=document.createElement("div");e.className="empty";
+    e.textContent="No encontramos tu nombre, prueba con tu apellido o consulta con los novios.";
+    res.append(e);return;
+  }
+  if(r.type==="fuzzy"){st.textContent="No hay coincidencias exactas. ¿Quisiste decir…?"}
+  else st.textContent=r.list.length===1?"Encontramos 1 resultado":"Encontramos "+r.list.length+" resultados: elige el tuyo";
+  r.list.forEach(g=>res.append(card(g)));
+}
+q.addEventListener("input",render);
+q.addEventListener("keydown",e=>{if(e.key==="Enter")q.blur()});
+clr.addEventListener("click",()=>{q.value="";render();q.focus()});
+render();
+window.addEventListener("load",()=>q.focus());
+</script>
+</body>
+</html>
